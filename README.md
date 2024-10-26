@@ -1,5 +1,5 @@
 <h1 align="center">
-MIRURO
+MIRURO MIDRUTO
 </h1>
 
 <p align="center">
