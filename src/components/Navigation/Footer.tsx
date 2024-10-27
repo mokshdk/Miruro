@@ -121,7 +121,7 @@ export function Footer() {
               About
             </FooterLink>
             <FooterLink
-              to='https://www.miruro.com'
+              to='/'
               target='_blank'
               title='Domains'
             >
@@ -136,7 +136,7 @@ export function Footer() {
           <Text as='p' $isSub={true}>
             &copy; {year}{' '}
             <a
-              href='https://www.miruro.com'
+              href='/'
               rel='noopener noreferrer'
               style={{ color: 'grey' }}
             >
@@ -148,17 +148,17 @@ export function Footer() {
             <SocialIconsWrapper>
               {[
                 {
-                  href: 'https://www.reddit.com/r/miruro',
+                  href: '/',
                   Icon: FaReddit,
                   label: 'Reddit',
                 },
                 {
-                  href: 'https://discord.gg/dubRrtfpFn',
+                  href: '/',
                   Icon: FaDiscord,
                   label: 'Discord',
                 },
                 {
-                  href: 'https://twitter.com/miruro_official',
+                  href: '/',
                   Icon: FaTwitter,
                   label: 'Twitter',
                 },
