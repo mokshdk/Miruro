@@ -21,6 +21,7 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
             vendor: ['react', 'react-dom'], // Manually define chunk for React and ReactDOM
           },
         },
+        external: ['@consumet/extensions'],
       },
     },
 
