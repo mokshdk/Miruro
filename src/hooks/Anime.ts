@@ -84,6 +84,7 @@ export async function AnimeInfo(params: { id?: string }) {
     return { error: 'Anime ID is required' };
   }
   let anilist = generateAnilistMeta();
+  console.log(anilist);
   const data = await anilist.fetchAnimeInfo(params.id, false, false);
   return { data: data };
 }
