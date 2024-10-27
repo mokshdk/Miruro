@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Genres, ANIME, META, StreamingServers } from '@consumet/extensions';
 import axios from 'axios';
 // advance search
