@@ -656,7 +656,24 @@ const Watch: React.FC = () => {
   }, [animeId]);
 
   // TODO SHOW NO EPISODES DIV IF NO RESPONSE AFTER 10 SECONDS
-  
+    useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (!episodes || episodes.length === 0) {
+        setShowNoEpisodesMessage(true);
+      }
+    }, 10000);
+    return () => clearTimeout(timeoutId);
+  }, [loading, episodes]);
+
+  // TODO SHOW NO EPISODES DIV IF NOT LOADING AND NO EPISODES FOUND
+  useEffect(() => {
+    if (!loading && episodes.length === 0) {
+      setShowNoEpisodesMessage(true);
+    } else {
+      setShowNoEpisodesMessage(false);
+    }
+  }, [loading, episodes]);
+
   return (
     <WatchContainer>
       {animeInfo &&
