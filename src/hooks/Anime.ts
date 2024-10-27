@@ -1,7 +1,4 @@
-import { Genres } from '@consumet/extensions/dist/models';
-import Anilist from '@consumet/extensions/dist/providers/meta/anilist';
-import { StreamingServers } from '@consumet/extensions/dist/models';
-import Gogoanime from '@consumet/extensions/dist/providers/anime/gogoanime';
+import { Genres, ANIME, META, StreamingServers } from '@consumet/extensions';
 import axios from 'axios';
 // advance search
 
@@ -242,6 +239,6 @@ export async function MalSyncAnilistGogo(params: {
 }
 
 // Constructor
-const generateAnilistMeta = (): Anilist => {
-  return new Anilist(new Gogoanime());
+const generateAnilistMeta = () => {
+  return new META.Anilist(new ANIME.Gogoanime());
 };
