@@ -1,7 +1,6 @@
 import {
   advancedSearch,
   AnimeData,
-  MalSyncAnilistGogo,
   AnimeInfo,
   Trending,
   AnimeEpisodes,
@@ -22,34 +21,11 @@ const SKIP_TIMES = ensureUrlEndsWithSlash(
 );
 
 // Function to handle errors and throw appropriately
-function handleError(error: any, context: string) {
+function handleError(error: any) {
   let errorMessage = 'An error occurred';
 
-  // Handling CORS errors (Note: This is a simplification. Real CORS errors are hard to catch in JS)
   if (error.message && error.message.includes('Access-Control-Allow-Origin')) {
     errorMessage = 'A CORS error occurred';
-  }
-
-  switch (context) {
-    case 'data':
-      errorMessage = 'Error fetching data';
-      break;
-    case 'anime episodes':
-      errorMessage = 'Error fetching anime episodes';
-      break;
-    // Extend with other cases as needed
-  }
-
-  if (error.response) {
-    // Extend with more nuanced handling based on HTTP status codes
-    const status = error.response.status;
-    if (status >= 500) {
-      errorMessage += ': Server error';
-    } else if (status >= 400) {
-      errorMessage += ': Client error';
-    }
-    // Include server-provided error message if available
-    errorMessage += `: ${error.response.data.message || 'Unknown error'}`;
   } else if (error.message) {
     errorMessage += `: ${error.message}`;
   }
@@ -171,32 +147,35 @@ async function fetchFromProxy(
     }
 
     let response: any;
-
-    switch (functionName) {
-      case 'AdvancedSearch':
-        response = await advancedSearch(parameters);
-        break;
-      case 'animedata':
-        response = await AnimeData(parameters);
-        break;
-      case 'animeinfo':
-        response = await AnimeInfo(parameters);
-        break;
-      case 'animetrending':
-        response = await Trending(parameters);
-        break;
-      case 'animeepisodes':
-        response = await AnimeEpisodes(parameters);
-        break;
-      case 'animeservers':
-        response = await AnimeServers(parameters);
-        break;
-      case 'animewatch':
-        response = await AnimeWatch(parameters);
-        break;
-      case 'animerecentepisodes':
-        response = await AnimeRecentEpisodes(parameters);
-        break;
+    try {
+      switch (functionName) {
+        case 'AdvancedSearch':
+          response = await advancedSearch(parameters);
+          break;
+        case 'animedata':
+          response = await AnimeData(parameters);
+          break;
+        case 'animeinfo':
+          response = await AnimeInfo(parameters);
+          break;
+        case 'animetrending':
+          response = await Trending(parameters);
+          break;
+        case 'animeepisodes':
+          response = await AnimeEpisodes(parameters);
+          break;
+        case 'animeservers':
+          response = await AnimeServers(parameters);
+          break;
+        case 'animewatch':
+          response = await AnimeWatch(parameters);
+          break;
+        case 'animerecentepisodes':
+          response = await AnimeRecentEpisodes(parameters);
+          break;
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     if (!response || !response?.data) {
@@ -210,7 +189,7 @@ async function fetchFromProxy(
 
     return response.data;
   } catch (error) {
-    handleError(error, 'data');
+    handleError(error);
     throw error;
   }
 }
@@ -259,7 +238,7 @@ export async function fetchAnimeData(
 ) {
   const cacheKey = generateCacheKey('animeData', animeId, provider);
 
-  return fetchFromProxy('animedata', { animeId }, animeDataCache, cacheKey);
+  return fetchFromProxy('animedata', { id: animeId }, animeDataCache, cacheKey);
 }
 
 // Fetch Anime INFO Function
@@ -269,7 +248,7 @@ export async function fetchAnimeInfo(
 ) {
   const cacheKey = generateCacheKey('animeInfo', animeId, provider);
 
-  return fetchFromProxy('animeinfo', { animeId }, animeInfoCache, cacheKey);
+  return fetchFromProxy('animeinfo', { id: animeId }, animeInfoCache, cacheKey);
 }
 
 // Function to fetch list of anime based on type (TopRated, Trending, Popular)
@@ -460,13 +439,17 @@ export async function fetchSkipTimes({
 
   let response: any;
   try {
-    response = await axios.get(url.toString());
+    response = await axios.get(`${url.toString()}`, {
+      headers: {
+        'user-agent:':
+          'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36',
+      },
+    });
   } catch (err) {
     return handleError(
       `Server error: ${
         response.data.statusCode || response.status
       } Unknown server error`,
-      'data',
     );
   }
 
@@ -479,7 +462,6 @@ export async function fetchSkipTimes({
       `Server error: ${
         response.data.statusCode || response.status
       } ${errorMessage}`,
-      'data',
     );
   }
 
